@@ -948,34 +948,52 @@
             k[n(216)](n(325), (function (e) {
                 var t = n;
                 e.preventDefault(),
-                    e[t(294)] && (ie(!1),
-                        null != Dn && 1 != e.pointerId || Nn || (Dn = e[t(426)],
-                            Te = Wn(e),
-                            Je ? ($e[t(258)] = Te,
-                                $e[t(571)] = $e.start) : (Ye = !0,
-                                    qe[t(258)].x = e[t(699)] * v,
-                                    qe[t(258)].y = e[t(536)] * v,
-                                    Ge = [],
-                                    Qe = null,
-                                    Rn(e),
-                                    k.style[t(522)] = "move",
-                                    function (e) {
-                                        var n = t;
-                                        if (e[n(426)] == Dn) {
-                                            nr();
-                                            var r = Wn(e);
-                                            if (Ce.x == r.x && Ce.y == r.y || (Le = !0),
-                                                Ce.x = r.x,
-                                                Ce.y = r.y,
-                                                Ce.start = Ce.x,
-                                                e[n(272)]) {
-                                                var a = rr();
-                                                a && (Qn(a[0], Zr(a[1])[1]) ? mr(0) : mr(Zr(a[1])[0]))
-                                            }
-                                            Hn()
-                                        }
-                                    }(e)),
-                            ge = !0))
+                ie(!1);
+                if ((null == Dn || 1 == e.pointerId) && !Nn) {
+                    Dn = e[t(426)];
+                    Te = Wn(e);
+                    if (Je) { // selection start
+                        var start = Te;
+                        var end = { x: start.x, y: start.y };
+                        if (window.currentRegionSelection.tiled) {
+                            start.tileX = Math.floor(start.x / 20);
+                            start.tileY = Math.floor(start.y / 10);
+                            end.tileX = start.tileX;
+                            end.tileY = start.tileY;
+                            start.x = start.tileX * 20;
+                            start.y = start.tileY * 10;
+                            end.x = start.x + 19;
+                            end.y = end.y + 9;
+                        }
+                        $e.start = start;
+                        $e.end = end;
+                    } else {
+                        Ye = !0,
+                            qe[t(258)].x = e[t(699)] * v,
+                            qe[t(258)].y = e[t(536)] * v,
+                            Ge = [],
+                            Qe = null,
+                            Rn(e),
+                            k.style[t(522)] = "move",
+                            function (e) {
+                                var n = t;
+                                if (e[n(426)] == Dn) {
+                                    nr();
+                                    var r = Wn(e);
+                                    if (Ce.x == r.x && Ce.y == r.y || (Le = !0),
+                                        Ce.x = r.x,
+                                        Ce.y = r.y,
+                                        Ce.start = Ce.x,
+                                        e[n(272)]) {
+                                        var a = rr();
+                                        a && (Qn(a[0], Zr(a[1])[1]) ? mr(0) : mr(Zr(a[1])[0]))
+                                    }
+                                    Hn()
+                                }
+                            }(e)
+                    }
+                    ge = !0;
+                }
             }
             )),
                 k[n(216)]("contextmenu", (function (e) {
@@ -989,8 +1007,22 @@
                         (Ve || Ze) && (ge = !0),
                         e[t(426)] == Dn && !Nn)) {
                         if (e[t(423)](),
-                            Je)
-                            $e[t(571)] = Te;
+                            Je) {
+                                if (currentRegionSelection.tiled) {
+                                    $e.end.tileX = Math.floor(Te.x / 20);
+                                    $e.end.tileY = Math.floor(Te.y / 10);
+                                    var startX = Math.min($e.end.tileX, $e.start.tileX);
+                                    var startY = Math.min($e.end.tileY, $e.start.tileY);
+                                    var endX = Math.max($e.end.tileX, $e.start.tileX);
+                                    var endY = Math.max($e.end.tileY, $e.start.tileY);
+                                    $e.start.x = startX * 20;
+                                    $e.start.y = startY * 10;
+                                    $e.end.x = endX * 20 + 19;
+                                    $e.end.y = endY * 10 + 9;
+                                } else {
+                                    $e.end = Te;
+                                }
+                            }// selection move
                         else if (Ye) {
                             var r = e.clientX * devicePixelRatio - qe.start.x / at
                                 , a = e[t(536)] * devicePixelRatio - qe[t(258)].y / at;
@@ -1029,54 +1061,35 @@
                     var t = n;
                     if (e[t(294)] && (e[t(423)](),
                         e[t(426)] == Dn && !Nn)) {
-                        if (Je && $e[t(258)] && $e[t(571)]) {
+                        if (Je && $e[t(258)] && $e[t(571)]) { //selection end
                             var r = Math.min($e.start.x, $e[t(571)].x)
                                 , o = Math[t(678)]($e.start.y, $e[t(571)].y)
                                 , i = Math[t(227)]($e.start.x, $e[t(571)].x)
                                 , c = Math[t(227)]($e.start.y, $e[t(571)].y);
+                            Je = false;
+                            $e = {};
+                            Dn = void 0;
+                            var regionSelection = window.currentRegionSelection;
+                            window.currentRegionSelection = null;
+                            /*
                             if (Je = !1,
                                 $e = {},
                                 m && Ze)
                                 tn = !0,
                                     a[t(197)](Or({
                                         c: [r, o, i, c]
-                                    }));
-                            else {
-                                var l = Ce.x
-                                    , u = Ce.y;
-                                Ce.x = r,
-                                    Ce.y = o;
-                                for (var s = "", d = "", f = !1, v = !1, h = o; h <= c; h++) {
-                                    for (var y = r; y <= i; y++) {
-                                        var g = rr();
-                                        if (g) {
-                                            g[0] == Z ? s += " " : s += g[0];
-                                            var [p, b] = Zr(g[1]);
-                                            tt[t(261)][t(427)] && tt[t(693)][t(427)] ? d += String[t(354)](ue + g[1]) : tt.copycolour[t(427)] ? d += String[t(354)](ue + p) : tt[t(693)].checked && (d += String[t(354)](ue + Vr(0, b))),
-                                                Qn(g[0], b) || (0 != b && (v = !0),
-                                                    0 != p && (f = !0)),
-                                                Ce.x++
-                                        }
+                                    }));*/
+                            // i think this is duck's admin panel options which has no use in tw2s4
+                            if (false) { } else {
+                                // todo run funcs in current region selection
+                                regionSelection.onSelectionEvents.forEach(func => {
+                                    try {
+                                        func(r, o, i, c);
+                                    } catch (e) {
+                                        console.error("Region selection event handler error:", e);
                                     }
-                                    Ce.x = r,
-                                        Ce.y++,
-                                        s += "\n",
-                                        d += "�"
-                                }
-                                s = s[t(386)](0, -1),
-                                    d = d[t(386)](0, -1),
-                                    s[t(482)](t(379)) && (f = v = !1),
-                                    tt[t(261)][t(427)] && f || tt[t(693)][t(427)] && v ? ar(s + Z + d) : ar(s),
-                                    Ce.x = l,
-                                    Ce.y = u,
-                                    ir("Copied selection.", 1500);
-                                var x = document[t(628)](t(420));
-                                x.src = t(207),
-                                    setTimeout((function () {
-                                        var e = t;
-                                        x[e(615)] = e(416)
-                                    }
-                                    ), 1e3)
+                                });
+                                
                             }
                         } else if (Dn = void 0,
                             Ye = !1,
@@ -2984,10 +2997,47 @@
             }
             function or(e) {
                 var t = n;
-                e[t(423)](),
-                    Je = !0,
-                    k.style.cursor = t(344),
-                    ir("Select an area to copy.", 1500)
+                e[t(423)]();
+                var regionSelection = new RegionSelection();
+                regionSelection.onSelection(function(r, o, i, c) {
+                    var l = Ce.x
+                        , u = Ce.y;
+                    Ce.x = r,
+                        Ce.y = o;
+                    for (var s = "", d = "", f = !1, v = !1, h = o; h <= c; h++) {
+                        for (var y = r; y <= i; y++) {
+                            var g = rr();
+                            if (g) {
+                                g[0] == Z ? s += " " : s += g[0];
+                                var [p, b] = Zr(g[1]);
+                                tt[t(261)][t(427)] && tt[t(693)][t(427)] ? d += String[t(354)](ue + g[1]) : tt.copycolour[t(427)] ? d += String[t(354)](ue + p) : tt[t(693)].checked && (d += String[t(354)](ue + Vr(0, b))),
+                                    Qn(g[0], b) || (0 != b && (v = !0),
+                                        0 != p && (f = !0)),
+                                    Ce.x++
+                            }
+                        }
+                        Ce.x = r,
+                            Ce.y++,
+                            s += "\n",
+                            d += "�"
+                    }
+                    s = s[t(386)](0, -1),
+                        d = d[t(386)](0, -1),
+                        s[t(482)](t(379)) && (f = v = !1),
+                        tt[t(261)][t(427)] && f || tt[t(693)][t(427)] && v ? ar(s + Z + d) : ar(s),
+                        Ce.x = l,
+                        Ce.y = u,
+                        ir("Copied selection.", 1500);
+                    var x = document[t(628)](t(420));
+                    x.src = t(207),
+                        setTimeout((function () {
+                            var e = t;
+                            x[e(615)] = e(416)
+                        }
+                        ), 1e3)
+                });
+                regionSelection.startSelection();
+                ir("Select an area to copy.", 1500)
             }
             function ir(e, t) {
                 var r = n;
@@ -4459,5 +4509,21 @@
             }
             window.w.changeColor = mr;
             window.w.showToast = ir;
+            window.currentRegionSelection = null;
+            window.RegionSelection = RegionSelection;
+            function RegionSelection() {
+                this.onSelectionEvents = [];
+                this.tiled = false;
+                this.startSelection = () => {
+                    if (Je) throw "There is already an active region selection";
+                    Je = true;
+                    window.currentRegionSelection = this;
+                    k.style.cursor = "crosshair";
+                };
+                this.onSelection = func => {
+                    this.onSelectionEvents.push(func);
+                }
+
+            }
         }(n(677) == typeof browser ? browser = {} : browser)
 }("undefined" == typeof browser ? browser = {} : browser);

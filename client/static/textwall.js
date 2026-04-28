@@ -1080,17 +1080,13 @@
                                         c: [r, o, i, c]
                                     }));*/
                             // i think this is duck's admin panel options which has no use in tw2s4
-                            if (false) { } else {
-                                // todo run funcs in current region selection
-                                regionSelection.onSelectionEvents.forEach(func => {
-                                    try {
-                                        func(r, o, i, c);
-                                    } catch (e) {
-                                        console.error("Region selection event handler error:", e);
-                                    }
-                                });
-                                
-                            }
+                            regionSelection.onSelectionEvents.forEach(func => {
+                                try {
+                                    func(r, o, i, c);
+                                } catch (e) {
+                                    console.error("Region selection event handler error:", e);
+                                }
+                            });
                         } else if (Dn = void 0,
                             Ye = !1,
                             qe[t(258)].x = null,
